@@ -1,0 +1,15 @@
+{
+  "name": "Trình Duyệt Siêu Cấp của Tôi",
+  "short_name": "MyBrowser",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff4757",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
